@@ -1,0 +1,42 @@
+{
+  "name": "@rezeus/kernel",
+  "version": "1.0.0-beta.1",
+  "description": "Kernel for event-driven applications.",
+  "main": "lib/index.js",
+  "files": [
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "kernel",
+    "event",
+    "config"
+  ],
+  "author": "Ozan Müyesseroğlu <ozanmuyes@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rezeus/kernel.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rezeus/kernel/issues"
+  },
+  "homepage": "https://github.com/rezeus/kernel#readme",
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "chai": "^4.2.0",
+    "eslint": "^5.9.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-chai-friendly": "^0.4.1",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-mocha": "^5.2.0",
+    "mocha": "^5.2.0"
+  },
+  "engines": {
+    "node": "^8.12.0"
+  }
+}
