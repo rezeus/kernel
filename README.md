@@ -10,6 +10,7 @@ Central place for emitting events (sync or async), gathering and storing configu
 * [Usage](#usage)
 * [Configuration](#configuration)
   * [Automatic Configuration](#automatic-configuration)
+* [Shutting Down the Kernel and the App](#shutting-down-the-kernel-and-the-app)
 * [Testing the App](#testing-the-app)
 * [API](#api)
   * [kernel.config](#kernelconfig)
@@ -198,8 +199,6 @@ kernel.once('booted', () => {
   // Code excerpted from https://nodejs.org/en/docs/guides/getting-started-guide/
   // and slightly modified
 
-  const server = http.createServer(server.callback());
-
   const server = http.createServer((req, res) => {
     // Now you can use Sequelize to query some data;
     // kernel.sequelize.query('SELECT * FROM my_table').then((result) => { ... }).catch(...);
@@ -316,6 +315,76 @@ kernel.config === {
   arr: ['str',true,42,{"an":"obj"},[1,'array']]
 };
 ```
+
+## Shutting Down the Kernel and the App
+
+To properly terminate the application process, also known as graceful shutdown, the application must close the resources (thus handing over them to the system back, if that's the case) it has been using (e.g. port(s), file descriptor(s), etc.) and notify the other applications/services it has been established connection on (e.g. database, caching service, mail delivery service, etc.). All those can be done as soon as a process signal received, namely the `SIGTERM`. But, as always, orchestrating bits and pieces is a messy job, so the kernel is here to help you.
+
+The `shutdown` method of the kernel does 3 things in order;
+ * Emits 'shutdown_server' asynchronous event,
+ * Emits 'shutdown_service' asynchronous event,
+ * Emits 'shutted_down' synchronous event.
+
+Recall that emitting an asynchronous event is merely blocking the code execution where the emit occured until all the asynchronous listeners settles. So we can wait for a listener to finish its job and also we can be confident about the result (either resolved or rejected) and act accordingly.
+
+Before the code example here's a quick notification; the application should start shutting down with the server, and then other services are OK to shutdown. Since this is the graceful shutdown the application should serve the connected users but disallowing new users to connect and then terminate itself. This is why the `shutdown` method emits 2 distinct asynchronous events.
+
+Let's assume we have a proper application code to start the server and a service to connect to the database (e.g. such `index.js` [here](https://gist.github.com/ozanmuyes/bfa1b6adc535df06bce4ad84642be909/e75e09170371d17385712351509298cd31150495) and `services/database.js` [here](https://gist.github.com/ozanmuyes/bfa1b6adc535df06bce4ad84642be909/e75e09170371d17385712351509298cd31150495));
+
+```javascript
+// index.js
+
+// snip
+
+// First register the listener against the kernel...
+kernel.on('shutted_down', () => {
+  process.exit();
+});
+
+process.on('SIGTERM', () => {
+  // ...and then start shutting down (i.e. graceful shutdown)
+  kernel.shutdown();
+
+  // NOTE Beware that the `SIGTERM` signal may be signalled multiple times (hance `.on()` not `.once()`)
+});
+
+kernel.boot();
+```
+
+The only missing thing is to register event listeners for shutdown events (i.e. 'shutdown_server' and 'shutdown_service'). The code addition above is merely a foundation for graceful shutdown. So we should update server and service (in this case only database) initialization procedures accordingly;
+
+```javascript
+// index.js
+
+// snip
+
+kernel.once('booted', () => {
+  // Kernel was booted. Here you can start the server.
+
+  // snip
+
+  kernel.once('shutdown_server', () => new Promise((resolve) => {
+    server.close(() => { resolve(); });
+  }));
+});
+
+// snip
+```
+
+```javascript
+// services/database.js
+
+// snip
+
+kernel.on('booting_backing', () => new Promise((resolve, reject) => {
+  // snip
+
+  // NOTE We are just returning the result of the `.close()` method since the return value is Promise
+  kernel.on('shutdown_service', () => sequelize.close());
+});
+```
+
+The changes made so far can be seen [here](https://gist.github.com/ozanmuyes/bfa1b6adc535df06bce4ad84642be909/revisions#diff-168726dbe96b3ce427e7fedce31bb0bc).
 
 ## Testing the App
 
