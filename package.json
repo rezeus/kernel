@@ -1,12 +1,11 @@
 {
   "name": "@rezeus/kernel",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.3",
   "description": "Kernel for event-driven applications.",
   "main": "lib/index.js",
   "files": [
     "lib",
-    "LICENSE",
-    "README.md"
+    "LICENSE"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

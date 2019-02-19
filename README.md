@@ -17,9 +17,12 @@ Central place for emitting events (sync or async), gathering and storing configu
   * [kernel.boot()](#kernelboot)
   * [Proxied events Methods](#proxied-events-methods)
     * [kernel.emit(eventName[, ...args])](#kernelemiteventname-args)
+    * [kernel.listeners(eventName)](#kernellistenerseventname)
     * [kernel.off(eventName, listener)](#kerneloffeventname-listener)
     * [kernel.on(eventName, listener)](#kerneloneventname-listener)
     * [kernel.once(eventName, listener)](#kernelonceeventname-listener)
+    * [kernel.prependListener(eventName, listener)](#kernelprependlistenereventname-listener)
+    * [kernel.prependOnceListener(eventName, listener)](#kernelprependoncelistenereventname-listener)
   * [Async Event Methods](#async-event-methods)
     * [kernel.emitAsync(eventName, data)](#kernelemitasynceventname-data)
     * [kernel.offAsync(eventName, listener)](#kerneloffasynceventname-listener)
@@ -405,6 +408,10 @@ Initiates the booting procedures on the kernel. Fires 'booting_backing' event, t
 
 Be aware that this method is not idempotent, that is calling it multiple times may cause strange behaviours. To prevent unwanted behaviours consider listening those events by 'once' and 'onceAsync' instead of 'on' and 'onAsync' where appropriate.
 
+### kernel.shutdown()
+
+Shutdown the kernel by closing the server and services to gracefully shutdown the application. To do that emits 2 async events; 'shutdown_server' and 'shutdown_service'. After the listeners of those events were settled, emits 'shutted_down' event (synchronously).
+
 ### Proxied events Methods
 
 Those methods are already defined in the `events` module and kernel only proxies those methods.
@@ -412,6 +419,10 @@ Those methods are already defined in the `events` module and kernel only proxies
 #### kernel.emit(eventName[, ...args])
 
 Please see [emitter.emit](https://nodejs.org/api/events.html#events_emitter_emit_eventname_args).
+
+#### kernel.listeners(eventName)
+
+Please see [emitter.listeners](https://nodejs.org/api/events.html#events_emitter_listeners_eventname).
 
 #### kernel.off(eventName, listener)
 
@@ -424,6 +435,14 @@ Please see [emitter.on](https://nodejs.org/api/events.html#events_emitter_on_eve
 #### kernel.once(eventName, listener)
 
 Please see [emitter.once](https://nodejs.org/api/events.html#events_emitter_once_eventname_listener).
+
+#### kernel.prependListener(eventName, listener)
+
+Please see [emitter.prependListener](https://nodejs.org/api/events.html#events_emitter_prependlistener_eventname_listener).
+
+#### kernel.prependOnceListener(eventName, listener)
+
+Please see [emitter.prependOnceListener](https://nodejs.org/api/events.html#events_emitter_prependoncelistener_eventname_listener).
 
 ### Async Event Methods
 
@@ -447,7 +466,7 @@ Same as `kernel.once()` but for async events.
 
 MIT License
 
-Copyright (c) 2018 Ozan Müyesseroğlu
+Copyright (c) 2018-2019 Ozan Müyesseroğlu
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
