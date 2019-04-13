@@ -402,7 +402,7 @@ In the 'test/index.js' file once the kernel has booted and server started to lis
 * [Mocha](https://mochajs.org/api/mocha#run)
 * [Karma](http://karma-runner.github.io/3.0/dev/public-api.html)
 
-For the test kernel it is well suited to manually configure the kernel.
+For the test kernel it is well suited to [manually configure the kernel](#configuration).
 
 Other environments may leverage from the NODE_ENV environment variable to determine the running environment and act accordingly. Or each environment, aside from setting the NODE_ENV with it's appropriate value, choose other files as application entry-points. So for example;
 
@@ -438,7 +438,7 @@ kernel.boot();
 whereas in the test environment a database connection might not be needed (assuming all tests are unit test, no integration tests);
 
 ```javascript
-// index.js - this one is for development environment
+// index.js - this one is for test environment
 
 const kernel = require('@rezeus/kernel');
 
@@ -456,8 +456,6 @@ kernel.configure({
 
 kernel.boot();
 ```
-
-Please also consult [@rezeus/framework](https://github.com/rezeus/framework) project for example usages.
 
 ## API
 
