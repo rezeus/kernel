@@ -404,16 +404,24 @@ In the 'test/index.js' file once the kernel has booted and server started to lis
 
 For the test kernel it is well suited to [manually configure the kernel](#configuration).
 
-Other environments may leverage from the NODE_ENV environment variable to determine the running environment and act accordingly. Or each environment, aside from setting the NODE_ENV with it's appropriate value, choose other files as application entry-points. So for example;
+Other environments may leverage from the NODE_ENV environment variable to determine the running environment and act accordingly;
+
+* For development `NODE_ENV=development node index.js`,
+* For staging `NODE_ENV=staging node index.js`,
+* For production `NODE_ENV=production node index.js`
+
+> NOTE: Same application entry file (i.e. `index.js`) for all different environments, only change is the value of NODE_ENV environment variable here.
+
+Or for each environment, aside from setting the NODE_ENV with it's appropriate value, use another application entry file. So for example;
 
 * For development `NODE_ENV=development node index.js`,
 * For staging `NODE_ENV=staging node index_staging.js`,
 * For production `NODE_ENV=production node index_production.js`
 
-commands might as well be executed. The point of having individual kernels is to have better control over the configuration and selectively `require` necessary packages or mock some parts of the application in the corresponding 'index' file. To help you to better understand the concept here is an example of such 'index' files;
+commands might as well be executed. The point of having individual entry files (thus kernels) is to have better control over the configuration and selectively `require` necessary packages or mock some parts of the application in the corresponding 'index' file. To help you to better understand the concept here is an example of such 'index' files;
 
 ```javascript
-// index.js - this one is for development environment
+// index.js - application entry file for development environment
 
 const kernel = require('@rezeus/kernel');
 
@@ -438,7 +446,7 @@ kernel.boot();
 whereas in the test environment a database connection might not be needed (assuming all tests are unit test, no integration tests);
 
 ```javascript
-// index.js - this one is for test environment
+// index.js - application entry file for test environment
 
 const kernel = require('@rezeus/kernel');
 

@@ -1,5 +1,6 @@
 node_modules/
 .vscode/
 *.code-*
+*.sublime-*
 test/*_manual*
 test/manual_*

@@ -1,6 +1,6 @@
 {
   "name": "@rezeus/kernel",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "description": "Kernel for event-driven applications.",
   "main": "lib/index.js",
   "files": [
@@ -26,13 +26,13 @@
   },
   "homepage": "https://github.com/rezeus/kernel#readme",
   "devDependencies": {
-    "babel-eslint": "^10.0.1",
+    "babel-eslint": "^10.0.2",
     "chai": "^4.2.0",
-    "eslint": "^5.9.0",
-    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-chai-friendly": "^0.4.1",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-mocha": "^5.2.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-mocha": "^5.3.0",
     "mocha": "^5.2.0"
   },
   "engines": {
